@@ -2,8 +2,8 @@
 
 namespace App\Domains\Language\Seeder;
 
-use App\Domains\Core\Seeder\SeederAbstract;
 use App\Domains\Language\Model\Language as Model;
+use App\Domains\Core\Seeder\SeederAbstract;
 
 class Language extends SeederAbstract
 {

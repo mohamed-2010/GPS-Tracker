@@ -2,8 +2,8 @@
 
 namespace App\Domains\Timezone\Test\ControllerApi;
 
-use App\Domains\CoreApp\Test\ControllerApi\ControllerApiAbstract as CoreAppControllerApiAbstract;
 use App\Domains\Timezone\Model\Timezone as Model;
+use App\Domains\CoreApp\Test\ControllerApi\ControllerApiAbstract as CoreAppControllerApiAbstract;
 
 abstract class ControllerApiAbstract extends CoreAppControllerApiAbstract
 {

@@ -42,7 +42,6 @@ import './data-scroll-bottom.js';
 import './data-click-one.js';
 import './data-delete-modal-one.js';
 import './data-update-boolean.js';
-import './data-tippy.js';
 import './modal.js';
 import './alert.js';
 import './data-maintenance-update-item.js';

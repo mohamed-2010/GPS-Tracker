@@ -10,45 +10,48 @@ return new class extends MigrationAbstract {
      */
     public function up(): void
     {
-        // Helper to drop columns if they exist
-        $dropColumnsIfExist = function (string $table, array $columns) {
-            foreach ($columns as $column) {
-                if (Schema::hasColumn($table, $column)) {
-                    Schema::table($table, function (Blueprint $table) use ($column) {
-                        $table->dropColumn($column);
-                    });
-                }
-            }
-        };
+        $this->db()->unprepared('
+            ALTER TABLE `alarm_notification`
+            DROP COLUMN IF EXISTS `latitude`,
+            DROP COLUMN IF EXISTS `longitude`;
+        ');
 
-        // Drop existing latitude and longitude columns
-        $dropColumnsIfExist('alarm_notification', ['latitude', 'longitude']);
-        $dropColumnsIfExist('city', ['latitude', 'longitude']);
-        $dropColumnsIfExist('position', ['latitude', 'longitude']);
-        $dropColumnsIfExist('refuel', ['latitude', 'longitude']);
-
-        // Add generated columns for alarm_notification
         $this->db()->unprepared('
             ALTER TABLE `alarm_notification`
             ADD COLUMN `latitude` DOUBLE AS (ROUND(ST_Y(`point`), 5)) STORED,
             ADD COLUMN `longitude` DOUBLE AS (ROUND(ST_X(`point`), 5)) STORED;
         ');
 
-        // Add generated columns for city
+        $this->db()->unprepared('
+            ALTER TABLE `city`
+            DROP COLUMN IF EXISTS `latitude`,
+            DROP COLUMN IF EXISTS `longitude`;
+        ');
+
         $this->db()->unprepared('
             ALTER TABLE `city`
             ADD COLUMN `latitude` DOUBLE AS (ROUND(ST_Y(`point`), 5)) STORED,
             ADD COLUMN `longitude` DOUBLE AS (ROUND(ST_X(`point`), 5)) STORED;
         ');
 
-        // Add generated columns for position
+        $this->db()->unprepared('
+            ALTER TABLE `position`
+            DROP COLUMN IF EXISTS `latitude`,
+            DROP COLUMN IF EXISTS `longitude`;
+        ');
+
         $this->db()->unprepared('
             ALTER TABLE `position`
             ADD COLUMN `latitude` DOUBLE AS (ROUND(ST_Y(`point`), 5)) STORED,
             ADD COLUMN `longitude` DOUBLE AS (ROUND(ST_X(`point`), 5)) STORED;
         ');
 
-        // Add generated columns for refuel
+        $this->db()->unprepared('
+            ALTER TABLE `refuel`
+            DROP COLUMN IF EXISTS `latitude`,
+            DROP COLUMN IF EXISTS `longitude`;
+        ');
+
         $this->db()->unprepared('
             ALTER TABLE `refuel`
             ADD COLUMN `latitude` DOUBLE AS (ROUND(ST_Y(`point`), 5)) STORED,

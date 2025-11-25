@@ -2,8 +2,8 @@
 
 namespace App\Domains\Refuel\Job;
 
-use App\Domains\Core\Job\JobAbstract as JobAbstractCore;
 use App\Domains\Refuel\Model\Refuel as Model;
+use App\Domains\Core\Job\JobAbstract as JobAbstractCore;
 
 abstract class JobAbstract extends JobAbstractCore
 {

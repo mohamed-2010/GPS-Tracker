@@ -2,8 +2,8 @@
 
 namespace App\Domains\Trip\Test\Controller;
 
-use App\Domains\CoreApp\Test\Controller\ControllerAbstract as CoreAppControllerAbstract;
 use App\Domains\Trip\Model\Trip as Model;
+use App\Domains\CoreApp\Test\Controller\ControllerAbstract as CoreAppControllerAbstract;
 
 abstract class ControllerAbstract extends CoreAppControllerAbstract
 {

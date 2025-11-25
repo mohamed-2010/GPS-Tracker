@@ -2,8 +2,8 @@
 
 namespace App\Domains\City\Model\Builder;
 
-use App\Domains\CoreApp\Model\Builder\BuilderAbstract;
 use App\Domains\Position\Model\Position as PositionModel;
+use App\Domains\CoreApp\Model\Builder\BuilderAbstract;
 
 class City extends BuilderAbstract
 {
@@ -112,8 +112,6 @@ class City extends BuilderAbstract
             'id',
             'name',
             'alias',
-            'latitude',
-            'longitude',
             'created_at',
             'updated_at',
             'state_id',
