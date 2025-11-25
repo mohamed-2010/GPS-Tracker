@@ -1,20 +1,20 @@
-import L from 'leaflet';
+import L from "leaflet";
 
-import 'leaflet-rotatedmarker';
+import "leaflet-rotatedmarker";
 
-import GeometryUtil from 'leaflet-geometryutil';
+import GeometryUtil from "leaflet-geometryutil";
 
 L.GeometryUtil = GeometryUtil;
 
-import leafletPolycolor from 'leaflet-polycolor';
+import leafletPolycolor from "leaflet-polycolor";
 
 leafletPolycolor(L);
 
-import Ajax from './ajax';
-import Storage from './storage';
-import feather from './feather';
-import value2color from './value2color';
-import number2color from './number2color';
+import Ajax from "./ajax";
+import Storage from "./storage";
+import feather from "./feather";
+import value2color from "./value2color";
+import number2color from "./number2color";
 
 export default class {
     constructor(element) {
@@ -62,7 +62,7 @@ export default class {
 
         this.listTable = null;
 
-        this.storage = new Storage('map');
+        this.storage = new Storage("map");
 
         return this;
     }
@@ -92,7 +92,7 @@ export default class {
     }
 
     setLayer() {
-        this.layer = new L.FeatureGroup()
+        this.layer = new L.FeatureGroup();
 
         this.layer.addTo(this.getMap());
         this.layer.bringToFront();
@@ -202,34 +202,50 @@ export default class {
 
     static getControlLayers() {
         return {
-            OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxNativeZoom: 19,
-                maxZoom: 22
-            }),
-            GoogleStreets: L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-                maxNativeZoom: 20,
-                maxZoom: 22,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            }),
-            GoogleSatellite: L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
-                maxNativeZoom: 20,
-                maxZoom: 22,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            }),
-            CartoDBVoyager: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
-                maxNativeZoom: 20,
-                maxZoom: 22,
-                subdomains: 'abcd'
-            })
+            OpenStreetMap: L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    maxNativeZoom: 19,
+                    maxZoom: 22,
+                }
+            ),
+            GoogleStreets: L.tileLayer(
+                "https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+                {
+                    maxNativeZoom: 20,
+                    maxZoom: 22,
+                    subdomains: ["mt0", "mt1", "mt2", "mt3"],
+                }
+            ),
+            GoogleSatellite: L.tileLayer(
+                "https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+                {
+                    maxNativeZoom: 20,
+                    maxZoom: 22,
+                    subdomains: ["mt0", "mt1", "mt2", "mt3"],
+                }
+            ),
+            CartoDBVoyager: L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+                {
+                    maxNativeZoom: 20,
+                    maxZoom: 22,
+                    subdomains: "abcd",
+                }
+            ),
         };
     }
 
     setControlLayers() {
-        L.control.layers(this.constructor.getControlLayers(), null, { position: 'topright', collapsed: true })
+        L.control
+            .layers(this.constructor.getControlLayers(), null, {
+                position: "topright",
+                collapsed: true,
+            })
             .addTo(this.getMap());
 
-        this.getMap().on('baselayerchange', (e) => {
-            this.storage.set('layer', e.name);
+        this.getMap().on("baselayerchange", (e) => {
+            this.storage.set("layer", e.name);
         });
 
         return this;
@@ -237,7 +253,7 @@ export default class {
 
     setControlLayerDefault() {
         const layers = this.constructor.getControlLayers();
-        let name = this.storage.get('layer');
+        let name = this.storage.get("layer");
 
         if (!name || !layers[name]) {
             name = Object.keys(layers)[0];
@@ -263,15 +279,18 @@ export default class {
         L.Control.Markers = L.Control.extend({ onAdd: () => container });
         L.control.markers = (options) => new L.Control.Markers(options);
 
-        if (this.storage.get('markers') === true) {
-            container.dispatchEvent(new Event('click'));
+        if (this.storage.get("markers") === true) {
+            container.dispatchEvent(new Event("click"));
         }
 
         return this;
     }
 
     setControlMarkersCreateContainer() {
-        const container =  L.DomUtil.create('div', 'leaflet-control-layers leaflet-control');
+        const container = L.DomUtil.create(
+            "div",
+            "leaflet-control-layers leaflet-control"
+        );
         const img = this.setControlMarkersCreateImg(container);
 
         const map = this.getMap();
@@ -281,18 +300,18 @@ export default class {
             e.stopPropagation();
 
             if (map.hasLayer(layerMarkers)) {
-                img.style.background = '#CCC';
+                img.style.background = "#CCC";
 
                 map.removeLayer(layerMarkers);
 
-                this.storage.set('markers', false);
+                this.storage.set("markers", false);
             } else {
-                img.style.background = '#A3EA9A';
+                img.style.background = "#A3EA9A";
 
                 layerMarkers.addTo(map);
                 layerMarkers.bringToBack();
 
-                this.storage.set('markers', true);
+                this.storage.set("markers", true);
             }
         };
 
@@ -302,19 +321,19 @@ export default class {
     }
 
     setControlMarkersCreateImg(container) {
-        const img = L.DomUtil.create('img', null, container);
+        const img = L.DomUtil.create("img", null, container);
 
-        img.src = WWW + '/build/images/map-direction.svg';
-        img.style.width = '44px';
-        img.style.height = '44px';
-        img.style.background = '#CCC';
-        img.style.padding = '10px';
+        img.src = WWW + "/build/images/map-direction.svg";
+        img.style.width = "44px";
+        img.style.height = "44px";
+        img.style.background = "#CCC";
+        img.style.padding = "10px";
 
         return img;
     }
 
     setControlMarkersLoad() {
-        L.control.markers({ position: 'topright' }).addTo(this.getMap());
+        L.control.markers({ position: "topright" }).addTo(this.getMap());
 
         return this;
     }
@@ -327,17 +346,17 @@ export default class {
 
     setControlLocateOptions() {
         return {
-            setView: 'once',
+            setView: "once",
             flyTo: true,
             keepCurrentZoomLevel: true,
             initialZoomLevel: false,
             locateOptions: {
                 watch: true,
-                enableHighAccuracy: true
+                enableHighAccuracy: true,
             },
             strings: {
-                title: ''
-            }
+                title: "",
+            },
         };
     }
 
@@ -370,7 +389,7 @@ export default class {
             zoomControl: true,
             zoomSnap: 0.5,
             zoomDelta: 0.5,
-            wheelPxPerZoomLevel: 200
+            wheelPxPerZoomLevel: 200,
         };
 
         return this.merge(defaults, options || this.mapOptions);
@@ -418,12 +437,14 @@ export default class {
     }
 
     setSpeeds() {
-        this.speeds = this.getPoints().map(point => point.speed);
+        this.speeds = this.getPoints().map((point) => point.speed);
 
         const speedMin = Math.min(...this.speeds);
         const speedMax = Math.max(...this.speeds);
 
-        this.setColors(this.speeds.map(speed => value2color(speed, speedMin, speedMax)));
+        this.setColors(
+            this.speeds.map((speed) => value2color(speed, speedMin, speedMax))
+        );
 
         return this;
     }
@@ -439,7 +460,7 @@ export default class {
     }
 
     setAlarms(alarms, options) {
-        this.array(alarms).forEach(alarm => this.setAlarm(alarm, options));
+        this.array(alarms).forEach((alarm) => this.setAlarm(alarm, options));
 
         return this;
     }
@@ -452,19 +473,19 @@ export default class {
         this.alarms.push(alarm);
 
         switch (alarm.type) {
-            case 'fence-in':
+            case "fence-in":
                 this.setAlarmFenceIn(alarm, options);
                 break;
 
-            case 'fence-out':
+            case "fence-out":
                 this.setAlarmFenceOut(alarm, options);
                 break;
 
-            case 'polygon-in':
+            case "polygon-in":
                 this.setAlarmPolygonIn(alarm, options);
                 break;
 
-            case 'polygon-out':
+            case "polygon-out":
                 this.setAlarmPolygonOut(alarm, options);
                 break;
         }
@@ -473,26 +494,30 @@ export default class {
     }
 
     setAlarmFenceIn(alarm, options) {
-        L.circle(this.getLatLng(alarm.config), this.getAlarmOptions(alarm, options))
-            .addTo(this.getMap());
+        L.circle(
+            this.getLatLng(alarm.config),
+            this.getAlarmOptions(alarm, options)
+        ).addTo(this.getMap());
     }
 
     setAlarmFenceOut(alarm, options) {
-        L.circle(this.getLatLng(alarm.config), this.getAlarmOptions(alarm, options))
-            .addTo(this.getMap());
+        L.circle(
+            this.getLatLng(alarm.config),
+            this.getAlarmOptions(alarm, options)
+        ).addTo(this.getMap());
     }
 
     setAlarmPolygonIn(alarm, options) {
         L.geoJson(alarm.config.geojson, {
             style: this.getAlarmOptions(alarm, options),
-            onEachFeature: (feature, layer) => this.getMap().addLayer(layer)
+            onEachFeature: (feature, layer) => this.getMap().addLayer(layer),
         });
     }
 
     setAlarmPolygonOut(alarm, options) {
         L.geoJson(alarm.config.geojson, {
             style: this.getAlarmOptions(alarm, options),
-            onEachFeature: (feature, layer) => this.getMap().addLayer(layer)
+            onEachFeature: (feature, layer) => this.getMap().addLayer(layer),
         });
     }
 
@@ -504,32 +529,40 @@ export default class {
         let valid = false;
 
         switch (alarm.type) {
-            case 'fence-in':
+            case "fence-in":
                 valid = this.isValidAlarmFenceIn(alarm);
                 break;
 
-            case 'fence-out':
+            case "fence-out":
                 valid = this.isValidAlarmFenceOut(alarm);
                 break;
 
-            case 'polygon-in':
+            case "polygon-in":
                 valid = this.isValidAlarmPolygonIn(alarm);
                 break;
 
-            case 'polygon-out':
+            case "polygon-out":
                 valid = this.isValidAlarmPolygonOut(alarm);
                 break;
         }
 
-        return (valid === true) && this.isValidAlarmNotLoaded(alarm);
+        return valid === true && this.isValidAlarmNotLoaded(alarm);
     }
 
     isValidAlarmFenceIn(alarm) {
-        return !!(alarm.config.latitude && alarm.config.longitude && alarm.config.radius);
+        return !!(
+            alarm.config.latitude &&
+            alarm.config.longitude &&
+            alarm.config.radius
+        );
     }
 
     isValidAlarmFenceOut(alarm) {
-        return !!(alarm.config.latitude && alarm.config.longitude && alarm.config.radius);
+        return !!(
+            alarm.config.latitude &&
+            alarm.config.longitude &&
+            alarm.config.radius
+        );
     }
 
     isValidAlarmPolygonIn(alarm) {
@@ -551,8 +584,7 @@ export default class {
     }
 
     isSameAlarm(loaded, current) {
-        return (loaded.type === current.type)
-            && (loaded.config === current.config);
+        return loaded.type === current.type && loaded.config === current.config;
     }
 
     getAlarmOptions(alarm, options) {
@@ -560,15 +592,17 @@ export default class {
             radius: parseFloat(alarm.config.radius) * 1000,
             fillOpacity: 0.05,
             opacity: 0.3,
-            color: alarm.type.match(/-in$/) ? 'red' : 'green',
-            fillColor: alarm.type.match(/-in$/) ? 'red' : 'green',
+            color: alarm.type.match(/-in$/) ? "red" : "green",
+            fillColor: alarm.type.match(/-in$/) ? "red" : "green",
         };
 
         return this.merge(defaults, options);
     }
 
     setNotifications(notifications, options) {
-        this.array(notifications).forEach(notification => this.setNotification(notification, options));
+        this.array(notifications).forEach((notification) =>
+            this.setNotification(notification, options)
+        );
 
         return this;
     }
@@ -580,22 +614,40 @@ export default class {
 
         this.setAlarm(notification);
 
-        const onClick = () => this.showMarker(this.getPointByLatitudeLongitude(notification.latitude, notification.longitude)?.id);
+        const onClick = () =>
+            this.showMarker(
+                this.getPointByLatitudeLongitude(
+                    notification.latitude,
+                    notification.longitude
+                )?.id
+            );
 
-        new L.Marker(this.getLatLng(notification), this.getNotificationOptions(notification, options))
-            .on('click', onClick)
+        new L.Marker(
+            this.getLatLng(notification),
+            this.getNotificationOptions(notification, options)
+        )
+            .on("click", onClick)
             .addTo(this.getMap());
 
         return this;
     }
 
     isValidNotification(notification) {
-        return notification && notification.type && notification.latitude && notification.longitude;
+        return (
+            notification &&
+            notification.type &&
+            notification.latitude &&
+            notification.longitude
+        );
     }
 
     getNotificationOptions(notification, options) {
         const defaults = {
-            iconUrl: WWW + '/build/images/map-notification-' + notification.type + '.svg',
+            iconUrl:
+                WWW +
+                "/build/images/map-notification-" +
+                notification.type +
+                ".svg",
             iconSize: [30, 42],
             iconAnchor: [15, 42],
         };
@@ -621,10 +673,16 @@ export default class {
         const latLng = this.getLatLng(device.position);
         const html = this.devicePopupHtml(device);
 
-        this.markers[id] = new L.Marker(latLng, this.getDeviceMarkerOptions(device, options))
+        this.markers[id] = new L.Marker(
+            latLng,
+            this.getDeviceMarkerOptions(device, options)
+        )
             .bindPopup(html, this.getDevicePopupOptions(device))
-            .bindTooltip(this.getDeviceTooltipTitle(device), this.getDeviceTooltipOptions(device))
-            .on('click', (e) => this.showMarker(id))
+            .bindTooltip(
+                this.getDeviceTooltipTitle(device),
+                this.getDeviceTooltipOptions(device)
+            )
+            .on("click", (e) => this.showMarker(id))
             .addTo(this.getLayerDevices());
 
         return this;
@@ -639,7 +697,7 @@ export default class {
 
     getDevicePopupOptions(device) {
         return {
-            offset: new L.Point(0, -25)
+            offset: new L.Point(0, -25),
         };
     }
 
@@ -648,11 +706,11 @@ export default class {
 
         if (device.vehicle) {
             if (device.name !== device.vehicle.name) {
-                title += '<br />' + device.vehicle.name;
+                title += "<br />" + device.vehicle.name;
             }
 
             if (device.vehicle.plate && device.vehicle.plate.length) {
-                title += '<br />' + device.vehicle.plate;
+                title += "<br />" + device.vehicle.plate;
             }
         }
 
@@ -663,14 +721,19 @@ export default class {
         return {
             interactive: true,
             permanent: true,
-            direction: 'top',
-            className: 'map-device-label',
+            direction: "top",
+            className: "map-device-label",
             opacity: 1,
         };
     }
 
     isValidDevice(device) {
-        return device && device.id && device.name && this.isValidPoint(device.position);
+        return (
+            device &&
+            device.id &&
+            device.name &&
+            this.isValidPoint(device.position)
+        );
     }
 
     setVehicles(vehicles) {
@@ -691,10 +754,16 @@ export default class {
         const latLng = this.getLatLng(vehicle.position);
         const html = this.vehiclePopupHtml(vehicle);
 
-        this.markers[id] = new L.Marker(latLng, this.getVehicleMarkerOptions(vehicle, options))
+        this.markers[id] = new L.Marker(
+            latLng,
+            this.getVehicleMarkerOptions(vehicle, options)
+        )
             .bindPopup(html, this.getVehiclePopupOptions(vehicle))
-            .bindTooltip(this.getVehicleTooltipTitle(vehicle), this.getVehicleTooltipOptions(vehicle))
-            .on('click', (e) => this.showMarker(id))
+            .bindTooltip(
+                this.getVehicleTooltipTitle(vehicle),
+                this.getVehicleTooltipOptions(vehicle)
+            )
+            .on("click", (e) => this.showMarker(id))
             .addTo(this.getLayerVehicles());
 
         return this;
@@ -709,7 +778,7 @@ export default class {
 
     getVehiclePopupOptions(vehicle) {
         return {
-            offset: new L.Point(0, -25)
+            offset: new L.Point(0, -25),
         };
     }
 
@@ -717,7 +786,7 @@ export default class {
         let title = vehicle.name;
 
         if (vehicle.plate && vehicle.plate.length) {
-            title += '<br />' + vehicle.plate;
+            title += "<br />" + vehicle.plate;
         }
 
         return title;
@@ -727,14 +796,19 @@ export default class {
         return {
             interactive: true,
             permanent: true,
-            direction: 'top',
-            className: 'map-vehicle-label',
+            direction: "top",
+            className: "map-vehicle-label",
             opacity: 1,
         };
     }
 
     isValidVehicle(vehicle) {
-        return vehicle && vehicle.id && vehicle.name && this.isValidPoint(vehicle.position);
+        return (
+            vehicle &&
+            vehicle.id &&
+            vehicle.name &&
+            this.isValidPoint(vehicle.position)
+        );
     }
 
     setRefuels(refuels) {
@@ -755,10 +829,13 @@ export default class {
         const latLng = this.getLatLng(refuel);
         const html = this.refuelPopupHtml(refuel);
 
-        this.markers[id] = new L.Marker(latLng, this.getRefuelMarkerOptions(refuel, options))
+        this.markers[id] = new L.Marker(
+            latLng,
+            this.getRefuelMarkerOptions(refuel, options)
+        )
             .bindPopup(html, this.getRefuelBindPopupOptions(refuel))
             .bindTooltip(refuel.price, this.getRefuelTooltipOptions(refuel))
-            .on('click', (e) => this.showMarker(id))
+            .on("click", (e) => this.showMarker(id))
             .addTo(this.getLayerRefuels());
 
         return this;
@@ -773,7 +850,7 @@ export default class {
 
     getRefuelBindPopupOptions(refuel) {
         return {
-            offset: new L.Point(0, -25)
+            offset: new L.Point(0, -25),
         };
     }
 
@@ -781,14 +858,16 @@ export default class {
         return {
             interactive: true,
             permanent: true,
-            direction: 'top',
-            className: 'map-refuel-label',
+            direction: "top",
+            className: "map-refuel-label",
             opacity: 1,
         };
     }
 
     isValidRefuel(refuel) {
-        return refuel && refuel.id && refuel.date_at && this.isValidPoint(refuel);
+        return (
+            refuel && refuel.id && refuel.date_at && this.isValidPoint(refuel)
+        );
     }
 
     setTrips(trips) {
@@ -802,7 +881,7 @@ export default class {
     setTripsReset() {
         const layer = this.getLayerTrips();
 
-        Object.values(this.trips).forEach(trip => {
+        Object.values(this.trips).forEach((trip) => {
             if (!trip.layer) {
                 return;
             }
@@ -833,7 +912,9 @@ export default class {
         this.setTripLayer(trip);
 
         this.setTripMarker(trip, trip.positions[0], { start: true });
-        this.setTripMarker(trip, trip.positions[trip.positions.length - 1], { finish: true });
+        this.setTripMarker(trip, trip.positions[trip.positions.length - 1], {
+            finish: true,
+        });
         this.setTripPositions(trip, trip.positions);
     }
 
@@ -853,10 +934,16 @@ export default class {
         const latLng = this.getLatLng(position);
         const html = this.tripPopupHtml(trip);
 
-        this.markers[position.id] = new L.Marker(latLng, this.getTripMarkerOptions(trip))
+        this.markers[position.id] = new L.Marker(
+            latLng,
+            this.getTripMarkerOptions(trip)
+        )
             .bindPopup(html, this.getTripBindPopupOptions(trip))
-            .bindTooltip(this.getTripTooltipTitle(trip, options), this.getTripTooltipOptions(trip, options))
-            .on('click', (e) => this.setTripMarkerClick(trip, position))
+            .bindTooltip(
+                this.getTripTooltipTitle(trip, options),
+                this.getTripTooltipOptions(trip, options)
+            )
+            .on("click", (e) => this.setTripMarkerClick(trip, position))
             .addTo(trip.layer);
 
         return this;
@@ -871,12 +958,12 @@ export default class {
 
     getTripBindPopupOptions(trip) {
         return {
-            offset: new L.Point(0, -25)
+            offset: new L.Point(0, -25),
         };
     }
 
     getTripTooltipTitle(trip, options) {
-        let title = '';
+        let title = "";
 
         if (options.start) {
             title += trip.start_at;
@@ -885,15 +972,15 @@ export default class {
         }
 
         if (trip.device?.name) {
-            title += '<br />' + trip.device.name;
+            title += "<br />" + trip.device.name;
         }
 
         if (trip.vehicle?.name) {
-            title += '<br />' + trip.vehicle.name;
+            title += "<br />" + trip.vehicle.name;
         }
 
         if (trip.vehicle?.plate) {
-            title += '<br />' + trip.vehicle.plate;
+            title += "<br />" + trip.vehicle.plate;
         }
 
         return title;
@@ -903,23 +990,23 @@ export default class {
         return {
             interactive: true,
             permanent: true,
-            direction: 'top',
+            direction: "top",
             className: this.getTripTooltipOptionsClassName(trip, options),
             opacity: 0.8,
         };
     }
 
     getTripTooltipOptionsClassName(trip, options) {
-        let className = 'map-trip-label';
+        let className = "map-trip-label";
 
         if (!options) {
             return className;
         }
 
         if (options.start) {
-            className += ' map-trip-label-start';
+            className += " map-trip-label-start";
         } else if (options.finish) {
-            className += ' map-trip-label-finish';
+            className += " map-trip-label-finish";
         }
 
         return className;
@@ -930,8 +1017,10 @@ export default class {
             trip.layer.removeLayer(trip.line);
         }
 
-        trip.line = new L.Polyline(positions.map(this.getLatLng), this.setTripPositionsOptions(trip))
-            .addTo(trip.layer);
+        trip.line = new L.Polyline(
+            positions.map(this.getLatLng),
+            this.setTripPositionsOptions(trip)
+        ).addTo(trip.layer);
 
         return this;
     }
@@ -974,7 +1063,7 @@ export default class {
     setTripsIds(ids) {
         const layer = this.getLayerTrips();
 
-        Object.values(this.trips).map(current => {
+        Object.values(this.trips).map((current) => {
             if (ids.includes(current.id)) {
                 if (!layer.hasLayer(current.layer)) {
                     layer.addLayer(current.layer);
@@ -992,7 +1081,13 @@ export default class {
     }
 
     isValidTrip(trip) {
-        return trip && trip.id && trip.name && trip.positions && trip.positions.length;
+        return (
+            trip &&
+            trip.id &&
+            trip.name &&
+            trip.positions &&
+            trip.positions.length
+        );
     }
 
     setIcon(name, point, options) {
@@ -1000,8 +1095,11 @@ export default class {
             this.getMap().removeLayer(this.icons[name]);
         }
 
-        this.icons[name] = new L.Marker(this.getLatLng(point), this.getIconOptions(name, options))
-            .on('click', (e) => this.showMarker(point.id))
+        this.icons[name] = new L.Marker(
+            this.getLatLng(point),
+            this.getIconOptions(name, options)
+        )
+            .on("click", (e) => this.showMarker(point.id))
             .addTo(this.getMap());
 
         return this;
@@ -1009,7 +1107,7 @@ export default class {
 
     getIconOptions(name, options) {
         const defaults = {
-            iconUrl: WWW + '/build/images/map-' + name + '.svg',
+            iconUrl: WWW + "/build/images/map-" + name + ".svg",
             iconSize: [30, 42],
             iconAnchor: [15, 42],
         };
@@ -1034,8 +1132,9 @@ export default class {
             this.getMap().removeLayer(this.line);
         }
 
-        this.line = L.polycolor(points, this.getLineOptions(lineOptions))
-            .addTo(this.getLayer());
+        this.line = L.polycolor(points, this.getLineOptions(lineOptions)).addTo(
+            this.getLayer()
+        );
 
         return this;
     }
@@ -1046,14 +1145,16 @@ export default class {
             useGradient: true,
             weight: 5,
             opacity: 1,
-            smoothFactor: 1
+            smoothFactor: 1,
         };
 
         return this.merge(defaults, options);
     }
 
     setMarkers(markers, options) {
-        this.array(markers).forEach(marker => this.setMarker(marker, options));
+        this.array(markers).forEach((marker) =>
+            this.setMarker(marker, options)
+        );
 
         return this;
     }
@@ -1068,12 +1169,16 @@ export default class {
 
         L.marker(latLng, this.getMarkerOptions(marker, options, optionsIcon))
             .bindPopup(html)
-            .on('click', (e) => this.showMarker(marker.id))
+            .on("click", (e) => this.showMarker(marker.id))
             .addTo(this.getLayerMarkers());
 
-        this.markers[marker.id] = L.circleMarker(latLng, { radius: 15, opacity: 0, fillOpacity: 0 })
+        this.markers[marker.id] = L.circleMarker(latLng, {
+            radius: 15,
+            opacity: 0,
+            fillOpacity: 0,
+        })
             .bindPopup(html)
-            .on('click', (e) => this.showMarker(marker.id))
+            .on("click", (e) => this.showMarker(marker.id))
             .addTo(this.getLayer());
 
         return this;
@@ -1086,19 +1191,19 @@ export default class {
     getMarkerOptions(marker, options, optionsIcon) {
         const defaults = {
             rotationAngle: marker.direction || 0,
-            rotationOrigin: 'center',
-            opacity: 0.95
+            rotationOrigin: "center",
+            opacity: 0.95,
         };
 
         const defaultsIcon = {
-            iconUrl: WWW + '/build/images/map-direction.svg',
+            iconUrl: WWW + "/build/images/map-direction.svg",
             iconSize: [10, 10],
-            iconAnchor: [5, 5]
+            iconAnchor: [5, 5],
         };
 
         return {
             ...this.merge(defaults, options),
-            icon: L.icon(this.merge(defaultsIcon, optionsIcon))
+            icon: L.icon(this.merge(defaultsIcon, optionsIcon)),
         };
     }
 
@@ -1128,22 +1233,24 @@ export default class {
         }
 
         this.listTable
-            .querySelectorAll('tr.selected')
-            .forEach(tr => tr.classList.remove('selected'));
+            .querySelectorAll("tr.selected")
+            .forEach((tr) => tr.classList.remove("selected"));
 
-        const mapPoint = this.listTable.querySelector('[data-map-point="' + id + '"');
+        const mapPoint = this.listTable.querySelector(
+            '[data-map-point="' + id + '"'
+        );
 
         if (!mapPoint) {
             return;
         }
 
-        mapPoint.closest('tr').classList.add('selected');
+        mapPoint.closest("tr").classList.add("selected");
 
         return this;
     }
 
     setView(point, zoom) {
-        this.setZoom(zoom)
+        this.setZoom(zoom);
         this.getMap().setView(this.getLatLng(point), zoom);
 
         return this;
@@ -1156,8 +1263,13 @@ export default class {
     }
 
     fitBounds(options) {
-        this.getMap().fitBounds(this.getLayer().getBounds(), this.getFitBoundsOptions(options));
-        this.invalidateSize();
+        const bounds = this.getLayer().getBounds();
+
+        // Check if bounds are valid (not empty)
+        if (bounds && bounds.isValid()) {
+            this.getMap().fitBounds(bounds, this.getFitBoundsOptions(options));
+            this.invalidateSize();
+        }
 
         return this;
     }
@@ -1165,7 +1277,7 @@ export default class {
     getFitBoundsOptions(options) {
         const defaults = {
             animate: false,
-            padding: [40, 40]
+            padding: [40, 40],
         };
 
         return this.merge(defaults, options);
@@ -1189,7 +1301,9 @@ export default class {
     }
 
     merge(first, second) {
-        return JSON.parse(JSON.stringify(Object.assign({}, first || {}, second || {})));
+        return JSON.parse(
+            JSON.stringify(Object.assign({}, first || {}, second || {}))
+        );
     }
 
     getLatLng(points) {
@@ -1203,7 +1317,7 @@ export default class {
 
         return {
             lat: points.latitude,
-            lng: points.longitude
+            lng: points.longitude,
         };
     }
 
@@ -1211,7 +1325,7 @@ export default class {
         for (let i = 0; i < this.points.length; i++) {
             const point = this.points[i];
 
-            if ((point.latitude === latitude) && (point.longitude === longitude)) {
+            if (point.latitude === latitude && point.longitude === longitude) {
                 return point;
             }
         }
@@ -1224,15 +1338,15 @@ export default class {
     }
 
     devicePopupHtml(device) {
-        let html = this.popupHtmlLine('device', device.name);
+        let html = this.popupHtmlLine("device", device.name);
 
         if (device.vehicle) {
             if (device.name !== device.vehicle.name) {
-                html += this.popupHtmlLine('vehicle', device.vehicle.name);
+                html += this.popupHtmlLine("vehicle", device.vehicle.name);
             }
 
             if (device.vehicle.plate && device.vehicle.plate.length) {
-                html += this.popupHtmlLine('plate', device.vehicle.plate);
+                html += this.popupHtmlLine("plate", device.vehicle.plate);
             }
         }
 
@@ -1240,51 +1354,88 @@ export default class {
     }
 
     vehiclePopupHtml(vehicle) {
-        let html = this.popupHtmlLine('vehicle', vehicle.name);
+        let html = this.popupHtmlLine("vehicle", vehicle.name);
 
         if (vehicle.plate && vehicle.plate.length) {
-            html += this.popupHtmlLine('plate', vehicle.plate);
+            html += this.popupHtmlLine("plate", vehicle.plate);
         }
 
         return html + this.popupHtmlPosition(vehicle.position);
     }
 
     refuelPopupHtml(refuel) {
-        return this.popupHtmlLine('vehicle', refuel.vehicle.name)
-            + this.popupHtmlLine('clock', refuel.date_at)
-            + this.popupHtmlLine('location', '<a href="https://maps.google.com/?q=' + refuel.latitude + ',' + refuel.longitude + '" rel="nofollow noopener noreferrer" target="_blank">' + refuel.latitude + ',' + refuel.longitude + '</a>')
-            + this.popupHtmlLineLocation(refuel);
+        return (
+            this.popupHtmlLine("vehicle", refuel.vehicle.name) +
+            this.popupHtmlLine("clock", refuel.date_at) +
+            this.popupHtmlLine(
+                "location",
+                '<a href="https://maps.google.com/?q=' +
+                    refuel.latitude +
+                    "," +
+                    refuel.longitude +
+                    '" rel="nofollow noopener noreferrer" target="_blank">' +
+                    refuel.latitude +
+                    "," +
+                    refuel.longitude +
+                    "</a>"
+            ) +
+            this.popupHtmlLineLocation(refuel)
+        );
     }
 
     popupHtmlPosition(marker) {
-        return this.popupHtmlLine('clock', marker.date_at)
-            + this.popupHtmlLine('location', '<a href="https://maps.google.com/?q=' + marker.latitude + ',' + marker.longitude + '" rel="nofollow noopener noreferrer" target="_blank">' + marker.latitude + ',' + marker.longitude + '</a>')
-            + this.popupHtmlLine('speed', marker.speed_human)
-            + this.popupHtmlLineLocation(marker);
+        return (
+            this.popupHtmlLine("clock", marker.date_at) +
+            this.popupHtmlLine(
+                "location",
+                '<a href="https://maps.google.com/?q=' +
+                    marker.latitude +
+                    "," +
+                    marker.longitude +
+                    '" rel="nofollow noopener noreferrer" target="_blank">' +
+                    marker.latitude +
+                    "," +
+                    marker.longitude +
+                    "</a>"
+            ) +
+            this.popupHtmlLine("speed", marker.speed_human) +
+            this.popupHtmlLineLocation(marker)
+        );
     }
 
     tripPopupHtml(trip) {
-        return this.popupHtmlLine('trip', trip.name)
-            + this.popupHtmlLine('vehicle', trip.vehicle?.name)
-            + this.popupHtmlLine('device', trip.device?.name)
-            + this.popupHtmlLine('distance', trip.distance_human)
-            + this.popupHtmlLine('clock', trip.time_human);
+        return (
+            this.popupHtmlLine("trip", trip.name) +
+            this.popupHtmlLine("vehicle", trip.vehicle?.name) +
+            this.popupHtmlLine("device", trip.device?.name) +
+            this.popupHtmlLine("distance", trip.distance_human) +
+            this.popupHtmlLine("clock", trip.time_human)
+        );
     }
 
     popupHtmlLine(type, value) {
         if (!value || !value.length) {
-            return '';
+            return "";
         }
 
-        return '<p style="margin: 0 !important; padding: 3px 20px 3px 0 !important; white-space: nowrap; vertical-align: middle !important;">' + this.svg(type) + ' ' + value + '</p>';
+        return (
+            '<p style="margin: 0 !important; padding: 3px 20px 3px 0 !important; white-space: nowrap; vertical-align: middle !important;">' +
+            this.svg(type) +
+            " " +
+            value +
+            "</p>"
+        );
     }
 
     popupHtmlLineLocation(marker) {
         if (!marker.city || !marker.state) {
-            return '';
+            return "";
         }
 
-        return this.popupHtmlLine('world', marker.city + ' (' + marker.state + ')');
+        return this.popupHtmlLine(
+            "world",
+            marker.city + " (" + marker.state + ")"
+        );
     }
 
     array(array) {
@@ -1292,6 +1443,12 @@ export default class {
     }
 
     svg(name) {
-        return '<span style="margin-right: 5px"><img src="' + WWW + '/build/images/map-popup-' + name + '.svg" width="15" height="15" style="display: inline-block;" /></span>';
+        return (
+            '<span style="margin-right: 5px"><img src="' +
+            WWW +
+            "/build/images/map-popup-" +
+            name +
+            '.svg" width="15" height="15" style="display: inline-block;" /></span>'
+        );
     }
-};
+}

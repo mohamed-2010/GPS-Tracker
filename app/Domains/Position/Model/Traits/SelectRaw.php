@@ -20,11 +20,15 @@ trait SelectRaw
             return [];
         }
 
+        // MariaDB compatible: Create polygon from bounding box coordinates
         static::db()->unprepared('
-            SET @boundingBox = ST_SRID(ST_MakeEnvelope(
-                Point('.$bounding_box['longitude_min'].', '.$bounding_box['latitude_min'].'),
-                Point('.$bounding_box['longitude_max'].', '.$bounding_box['latitude_max'].')
-            ), 4326);
+            SET @boundingBox = ST_GeomFromText(\'POLYGON(('
+                .$bounding_box['longitude_min'].' '.$bounding_box['latitude_min'].','
+                .$bounding_box['longitude_max'].' '.$bounding_box['latitude_min'].','
+                .$bounding_box['longitude_max'].' '.$bounding_box['latitude_max'].','
+                .$bounding_box['longitude_min'].' '.$bounding_box['latitude_max'].','
+                .$bounding_box['longitude_min'].' '.$bounding_box['latitude_min']
+            .'))\', 4326);
 
             SET @distance = ST_Distance_Sphere(
                 Point('.$bounding_box['longitude_min'].', '.$bounding_box['latitude_min'].'),

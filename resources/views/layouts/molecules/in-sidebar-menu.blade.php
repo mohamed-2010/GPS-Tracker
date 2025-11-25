@@ -47,7 +47,7 @@
 </li>
 
 @php ($active = str_starts_with($ROUTE, 'refuel.'))
-
+@if ($AUTH->managerMode())
 <li>
     <a href="javascript:;" class="side-menu {{ $active ? 'side-menu--active' : '' }}">
         <div class="side-menu__icon">@icon('battery-charging')</div>
@@ -79,7 +79,7 @@
         </li>
     </ul>
 </li>
-
+@endif
 @php ($active = str_starts_with($ROUTE, 'maintenance'))
 
 <li>

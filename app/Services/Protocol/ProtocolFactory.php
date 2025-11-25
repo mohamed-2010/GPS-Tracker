@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Services\Protocol;
 
@@ -6,6 +8,7 @@ use App\Exceptions\UnexpectedValueException;
 use App\Services\Protocol\Aquila\Manager as AquilaManager;
 use App\Services\Protocol\DebugHttp\Manager as DebugHttpManager;
 use App\Services\Protocol\DebugSocket\Manager as DebugSocketManager;
+use App\Services\Protocol\JT808\Manager as JT808Manager;
 use App\Services\Protocol\GPS103\Manager as GPS103Manager;
 use App\Services\Protocol\GT06\Manager as GT06Manager;
 use App\Services\Protocol\H02\Manager as H02Manager;
@@ -25,6 +28,7 @@ class ProtocolFactory
             'aquila' => AquilaManager::class,
             'debug-http' => DebugHttpManager::class,
             'debug-socket' => DebugSocketManager::class,
+            'jt808' => JT808Manager::class,
             'gps103' => GPS103Manager::class,
             'gt06' => GT06Manager::class,
             'h02' => H02Manager::class,

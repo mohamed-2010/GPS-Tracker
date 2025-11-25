@@ -1,4 +1,5 @@
 [
     "vendor|leaflet.locatecontrol/dist/L.Control.Locate.min.js",
+    "vendor|leaflet-draw/dist/leaflet.draw.js",
     "js|bootstrap.js"
 ]

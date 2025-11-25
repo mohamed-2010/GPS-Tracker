@@ -12,6 +12,12 @@ import './data-map-heat.js';
 import './data-current-datetime.js';
 import './nav-tabs.js';
 
+// Make Map and GeofenceDraw globally available
+import MapClass from './map.js';
+import GeofenceDraw from './geofence-draw.js';
+window.Map = MapClass;
+window.GeofenceDraw = GeofenceDraw;
+
 // Events on Listener
 import './data-calculator.js';
 import './data-notification-request.js';

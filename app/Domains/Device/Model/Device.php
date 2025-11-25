@@ -4,6 +4,7 @@ namespace App\Domains\Device\Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Domains\CoreApp\Model\ModelAbstract;
@@ -15,6 +16,8 @@ use App\Domains\Position\Model\Position as PositionModel;
 use App\Domains\Trip\Model\Trip as TripModel;
 use App\Domains\User\Model\User as UserModel;
 use App\Domains\Vehicle\Model\Vehicle as VehicleModel;
+use App\Domains\Geofence\Model\Geofence as GeofenceModel;
+use App\Domains\Geofence\Model\DeviceGeofence as DeviceGeofenceModel;
 
 class Device extends ModelAbstract
 {
@@ -147,6 +150,16 @@ class Device extends ModelAbstract
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(VehicleModel::class, VehicleModel::FOREIGN);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function geofences(): BelongsToMany
+    {
+        return $this->belongsToMany(GeofenceModel::class, DeviceGeofenceModel::TABLE)
+            ->withPivot('mode', 'enabled')
+            ->withTimestamps();
     }
 
     /**

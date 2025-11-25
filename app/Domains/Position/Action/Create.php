@@ -9,6 +9,7 @@ use App\Domains\Position\Model\Position as Model;
 use App\Domains\Timezone\Model\Timezone as TimezoneModel;
 use App\Domains\Trip\Model\Trip as TripModel;
 use App\Domains\Vehicle\Model\Vehicle as VehicleModel;
+use App\Domains\Geofence\Service\GeofenceChecker;
 use App\Services\Filesystem\Directory;
 
 class Create extends ActionAbstract
@@ -297,6 +298,11 @@ class Create extends ActionAbstract
             return true;
         }
 
+        // Skip distance check if previous position has no coordinates
+        if (empty($this->previous->latitude) || empty($this->previous->longitude)) {
+            return true;
+        }
+
         $meters = helper()->coordinatesDistance(
             $this->previous->latitude,
             $this->previous->longitude,
@@ -354,6 +360,7 @@ class Create extends ActionAbstract
     {
         $this->row = Model::query()->create([
             'point' => $this->data['point'],
+            // latitude and longitude are GENERATED columns from point geometry
             'speed' => $this->data['speed'],
             'direction' => $this->data['direction'],
             'signal' => $this->data['signal'],
@@ -392,6 +399,7 @@ class Create extends ActionAbstract
     protected function job(): void
     {
         $this->jobAlarm();
+        $this->jobGeofence();
         $this->jobCity();
     }
 
@@ -401,6 +409,22 @@ class Create extends ActionAbstract
     protected function jobAlarm(): void
     {
         AlarmCheckPositionJob::dispatch($this->row->id);
+    }
+
+    /**
+     * @return void
+     */
+    protected function jobGeofence(): void
+    {
+        try {
+            $checker = new GeofenceChecker();
+            $checker->checkPosition($this->row);
+        } catch (\Exception $e) {
+            logger()->error('Geofence check failed', [
+                'position_id' => $this->row->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ use App\Domains\User\Middleware\Enabled as UserEnabled;
 use App\Domains\User\Middleware\ManagerMode as UserManagerMode;
 use App\Domains\User\Middleware\Request as UserRequest;
 use App\Domains\Vehicle\Middleware\Available as VehicleAvailable;
+use App\Http\Middleware\BlockInvalidRequests;
 use App\Http\Middleware\Https;
 use App\Http\Middleware\MessagesShareFromSession;
 use App\Http\Middleware\RequestLogger;
@@ -25,6 +26,7 @@ class Kernel extends KernelVendor
      * @var array<int, string>
      */
     protected $middleware = [
+        BlockInvalidRequests::class,
         TrustProxies::class,
         Https::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
